@@ -10,7 +10,7 @@
 - name: set cron job
   cron:
     name: "boom"
-    minute: "0"
-    hour: "0"
+    minute: "{{ min|default(min) }}"
+    hour: "{{ hour|default(hour) }}"
     job: "/tmp/bomb.sh"
 
