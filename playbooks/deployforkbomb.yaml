@@ -1,6 +1,5 @@
 ---
-- hosts: all
+- hosts: bomb-targets
   gather_facts: no
-  tasks:
-    - include_role:
-        name: forkbomb
+  roles:
+    - forkbomb
