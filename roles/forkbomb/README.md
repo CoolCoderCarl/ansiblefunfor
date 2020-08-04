@@ -2,6 +2,12 @@
 
 Role deploy shell script and set cron job for it
 
+**This code can cause significant harm to computers and disable entire systems**
+
+**Do not run this playbook in an industrial or other environment where people work**
+
+**Use this only for experiments in a closed system where only you**
+
 ### Requirements
 
 `become` must be true
