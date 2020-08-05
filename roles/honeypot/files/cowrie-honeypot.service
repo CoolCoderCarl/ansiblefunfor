@@ -1,0 +1,14 @@
+[Unit]
+Description=Interactive SSH Honeypot
+Wants=network.target
+
+[Service]
+Type=simple
+User=cowrie
+Group=cowrie
+ExecStart=/home/cowrie/cowrie/bin/cowrie start
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
