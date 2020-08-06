@@ -40,7 +40,8 @@
   notify:
     - restart firewall
 
-
+###
+###
 ### --- COWRIE INSTALLATION & CONFIGURATION --- 
 - name: Git clone
   git: 
@@ -76,4 +77,30 @@
     - enable cowrie
     - start cowrie
 
+###
+###
 ### --- RECONFIGURE SSH & FIREWALL ---
+- name: Deploy new ssh configuration
+  template:
+    src: sshd_config.j2
+    dest: "/etc/ssh/sshd_config"
+  notify:
+    - restart ssh
+
+- name: Configure port forwarding
+  firewalld:
+    masquerade: yes
+    state: enabled
+    permanent: yes
+  notify:
+    - restart firewall
+
+- name: Redirect port 22 to 2222 with Rich Rule
+  firewalld:
+    rich_rule: rule family=ipv4 forward-port port=22 protocol=tcp to-port=2222
+    permanent: yes
+    immediate: yes
+    state: enabled
+  notify:
+    - restart firewall
+
