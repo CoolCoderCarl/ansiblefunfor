@@ -1,5 +1,10 @@
 ---
+###
+###
 ### --- PRECONFIGURE ---
+###
+###
+
 - name: Install required packages
   package:
     name: "{{ item }}"
@@ -36,13 +41,21 @@
     - 22
     - 222
     - 2222
-    - 22222
+    - 1269
   notify:
     - restart firewall
 
 ###
 ###
 ### --- COWRIE INSTALLATION & CONFIGURATION --- 
+###
+###
+
+- name: Register git cowrie repository
+  stat:
+    path: "/home/cowrie/cowrie/.git/"
+  register: git_cowrie_repo
+
 - name: Git clone
   git: 
     repo: https://github.com/cowrie/cowrie.git
@@ -50,6 +63,7 @@
     version: master
   become: yes
   become_user: cowrie
+  when: git_cowrie_repo.stat.exists != True
 
 - name: Install requirements
   pip:
@@ -77,9 +91,31 @@
     - enable cowrie
     - start cowrie
 
+- name: Create userdb for connection to cowrie
+  copy:
+    src: userdb.txt
+    dest: "/home/cowrie/cowrie/etc/userdb.txt"
+    owner: cowrie
+    group: cowrie
+    mode: "0644"
+  notify:
+    - restart cowrie
+
+- name: Create soft link for cowrie logs
+  file:
+    src: "/home/cowrie/cowrie/var/log/cowrie/cowrie.log"
+    dest: "/var/log/cowrie.log"
+    owner: cowrie
+    group: cowrie
+    state: link
+    force: yes
+
 ###
 ###
 ### --- RECONFIGURE SSH & FIREWALL ---
+###
+###
+
 - name: Deploy new ssh configuration
   template:
     src: sshd_config.j2

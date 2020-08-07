@@ -8,11 +8,11 @@ Role deploy shell script and set cron job for it
 
 **Use this only for experiments in a closed system where only you**
 
-### Requirements
+## Requirements
 
 `become` must be true
 
-### Role Variables
+## Role Variables
 
 Minutes  
 `min` - set minute for cron job
@@ -20,6 +20,6 @@ Minutes
 Hours  
 `hour` - set hour for cron job
 
-### Example
+## Example
 
 `ansible-playbook playbooks/deployforkbomb.yaml -i inventories/hosts`
