@@ -1,4 +1,4 @@
-### Ansible Role: honeypot
+# Ansible Role: honeypot
 
 Deploy a brute force protection for CentOS 8
 
