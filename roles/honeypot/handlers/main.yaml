@@ -1,0 +1,45 @@
+---
+### --- FIREWALL ---
+### Enable service
+- name: enable firewall
+  service:
+    name: firewalld
+    enabled: yes
+
+### Start service
+- name: start firewall
+  service:
+    name: firewalld
+    state: started
+
+### Restart service
+- name: restart firewall
+  service:
+    name: firewalld
+    state: restarted
+
+### --- COWRIE --- 
+### Enable service
+- name: enable cowrie
+  service:
+    name: cowrie-honeypot
+    enabled: yes
+
+### Start service
+- name: start cowrie
+  service:
+    name: cowrie-honeypot
+    state: started
+
+### Restart service
+- name: restart cowrie
+  service:
+    name: cowrie-honeypot
+    state: restarted
+
+### --- SSH ---
+### Restart service
+- name: restart ssh
+  service:
+    name: sshd
+    state: restarted
