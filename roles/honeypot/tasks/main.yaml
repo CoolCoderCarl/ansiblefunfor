@@ -1,19 +1,17 @@
 ---
 ###
-###
 ### --- PRECONFIGURE ---
-###
 ###
 
 - name: Install required packages
   package:
     name: "{{ item }}"
   with_items:
+    - git
     - python3
     - python3-pip
     - python3-virtualenv
     - firewalld
-    - git
   notify:
     - enable firewall
     - start firewall
@@ -32,23 +30,18 @@
   notify:
     - restart firewall
 
-- name: Firewall allow ports
+- name: Firewall allow ports "{{ ports }}"
   firewalld:
     port: "{{ item }}/tcp"
     permanent: true
     state: enabled
   with_items:
-    - 22
-    - 222
-    - 2222
-    - 1269
+    - "{{ ports }}"
   notify:
     - restart firewall
 
 ###
-###
 ### --- COWRIE INSTALLATION & CONFIGURATION --- 
-###
 ###
 
 - name: Register git cowrie repository
@@ -68,9 +61,6 @@
 - name: Install requirements
   pip:
     requirements: "{{ git_cowrie_home }}/requirements.txt"
-    # virtualenv: "{{ git_cowrie_home }}/cowrie-venv"
-    # virtualenv_command: virtualenv-3
-    # executable: pip3
 
 - name: Deploy cowrie-bin
   copy:
@@ -111,9 +101,7 @@
     force: yes
 
 ###
-###
 ### --- RECONFIGURE SSH & FIREWALL ---
-###
 ###
 
 - name: Deploy new ssh configuration
@@ -140,3 +128,27 @@
   notify:
     - restart firewall
 
+###
+### --- SELINUX CONFIGURATION ---
+###
+
+- name: Install selinux python packages
+  package:
+    name: "{{ pckg_selinux }}"
+  when: use_selinux
+
+- name: Copy selinux configuration file
+  copy:
+    src: selinux.conf
+    dest: /etc/selinux/config
+  when: use_selinux
+
+- name: Allow selinux tcp ports {{ ports }}
+  seport:
+    ports: "{{ item }}"
+    proto: tcp
+    setype: ssh_port_t
+    state: present
+  with_items:
+    - "{{ ports }}"
+  when: use_selinux

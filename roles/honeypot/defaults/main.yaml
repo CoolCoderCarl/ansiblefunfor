@@ -1,0 +1,13 @@
+### PORTS
+### USED IN SSHD CONFIG 
+ssh_port: 1269
+
+### USED FOR FIREWALL AND SELINUX CONTEXT
+ports:
+  - 22
+  - 222
+  - 2222
+  - "{{ ssh_port }}"
+
+### SELINUX BOOL SWITCHER
+use_selinux: True
