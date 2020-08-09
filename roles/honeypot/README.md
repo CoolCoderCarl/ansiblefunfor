@@ -9,6 +9,7 @@ Deploy a brute force protection for CentOS 8
 `become` must be true
 `gather_facts` must be true
 `firewall` must be operation
+`selinux` must be operation
 
 Set `ansible_port=1269` for `ssh-defends` group after installation 
 
@@ -19,6 +20,9 @@ Cowrie home
 
 SSH port  
 `ssh_port` custom ssh port, default is `1269`
+
+Bool switcher  
+`use_selinux` if need to use selinux power
 
 ## Example
 

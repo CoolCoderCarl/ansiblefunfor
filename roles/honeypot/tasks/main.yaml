@@ -9,11 +9,11 @@
   package:
     name: "{{ item }}"
   with_items:
+    - git
     - python3
     - python3-pip
     - python3-virtualenv
     - firewalld
-    - git
   notify:
     - enable firewall
     - start firewall
@@ -32,16 +32,13 @@
   notify:
     - restart firewall
 
-- name: Firewall allow ports
+- name: Firewall allow ports "{{ ports }}"
   firewalld:
     port: "{{ item }}/tcp"
     permanent: true
     state: enabled
   with_items:
-    - 22
-    - 222
-    - 2222
-    - 1269
+    - "{{ ports }}"
   notify:
     - restart firewall
 
@@ -140,3 +137,29 @@
   notify:
     - restart firewall
 
+###
+###
+### --- SELINUX CONFIGURATION ---
+###
+###
+
+- name: Install selinux python packages
+  package:
+    name: "{{ pckg_selinux }}"
+  when: use_selinux
+
+- name: Copy selinux configuration file
+  copy:
+    src: selinux.conf
+    dest: /etc/selinux/config
+  when: use_selinux
+
+- name: Allow sshd to listen on tcp ports {{ ports }}
+  seport:
+    ports: "{{ item }}"
+    proto: tcp
+    setype: ssh_port_t
+    state: present
+  with_items:
+    - "{{ ports }}"
+  when: use_selinux
