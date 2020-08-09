@@ -1,8 +1,6 @@
 ---
 ###
-###
 ### --- PRECONFIGURE ---
-###
 ###
 
 - name: Install required packages
@@ -43,9 +41,7 @@
     - restart firewall
 
 ###
-###
 ### --- COWRIE INSTALLATION & CONFIGURATION --- 
-###
 ###
 
 - name: Register git cowrie repository
@@ -65,9 +61,6 @@
 - name: Install requirements
   pip:
     requirements: "{{ git_cowrie_home }}/requirements.txt"
-    # virtualenv: "{{ git_cowrie_home }}/cowrie-venv"
-    # virtualenv_command: virtualenv-3
-    # executable: pip3
 
 - name: Deploy cowrie-bin
   copy:
@@ -108,9 +101,7 @@
     force: yes
 
 ###
-###
 ### --- RECONFIGURE SSH & FIREWALL ---
-###
 ###
 
 - name: Deploy new ssh configuration
@@ -138,9 +129,7 @@
     - restart firewall
 
 ###
-###
 ### --- SELINUX CONFIGURATION ---
-###
 ###
 
 - name: Install selinux python packages
@@ -154,7 +143,7 @@
     dest: /etc/selinux/config
   when: use_selinux
 
-- name: Allow sshd to listen on tcp ports {{ ports }}
+- name: Allow selinux tcp ports {{ ports }}
   seport:
     ports: "{{ item }}"
     proto: tcp
