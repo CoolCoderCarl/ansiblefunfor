@@ -35,6 +35,7 @@
     port: "{{ item }}/tcp"
     permanent: true
     state: enabled
+    immediate: true
   with_items:
     - "{{ ports }}"
   notify:
@@ -69,6 +70,7 @@
     owner: cowrie
     group: cowrie
     mode: "0755"
+    backup: yes
 
 - name: Deploy systemd
   copy:
@@ -88,6 +90,7 @@
     owner: cowrie
     group: cowrie
     mode: "0644"
+    backup: yes
   notify:
     - restart cowrie
 
@@ -108,6 +111,11 @@
   template:
     src: sshd_config.j2
     dest: "/etc/ssh/sshd_config"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: yes
+    validate: /usr/sbin/sshd -t -f %s
   notify:
     - restart ssh
 
@@ -152,3 +160,4 @@
   with_items:
     - "{{ ports }}"
   when: use_selinux
+...
